@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>eme</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>eme lang</title>
   <style>
     body {
       margin: 0;
       height: 100vh;
-      background: linear-gradient(to bottom right, #fff9c4, #fffde7);
-      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      font-family: 'Georgia', serif;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      color: #5d4037;
+      color: #fce4ec;
       flex-direction: column;
     }
 
@@ -26,16 +25,11 @@
       position: relative;
       width: 100%;
       max-width: 700px;
-      padding: 20px;
-      border-radius: 15px;
-      background-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     h1 {
       font-size: 2.5em;
       margin-bottom: 40px;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
 
     .buttons {
@@ -52,26 +46,23 @@
       border-radius: 8px;
       border: 2px solid transparent;
       min-width: 120px;
-      transition: background-color 0.3s, color 0.3s, transform 0.2s;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      font-family: 'Poppins', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     #yes-button {
-      border-color: #ffeb3b;
-      background-color: #fff;
-      color: #ffeb3b;
+      border-color: #4CAF50;
+      background-color: white;
+      color: #4CAF50;
     }
 
     #yes-button:hover {
-      background-color: #ffeb3b;
+      background-color: #4CAF50;
       color: white;
-      transform: scale(1.05);
     }
 
     #no-button {
       border-color: #f44336;
-      background-color: #fff;
+      background-color: white;
       color: #f44336;
       position: relative;
       transition: top 0.3s ease-out, left 0.3s ease-out;
@@ -80,7 +71,6 @@
     #no-button:hover {
       background-color: #f44336;
       color: white;
-      transform: scale(1.05);
     }
 
     #sunflower-video-container {
@@ -107,7 +97,7 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: rgba(0, 0, 0, 0.6);
       animation: fadeIn 1s;
     }
 
@@ -121,7 +111,6 @@
       max-width: 600px;
       text-align: center;
       color: #000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     }
 
     #audio-player {
@@ -143,12 +132,6 @@
       border-radius: 8px;
       cursor: pointer;
       color: #000;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-
-    #click-it-button:hover {
-      background-color: #f57c00;
-      transform: scale(1.05);
     }
 
     #questions {
@@ -174,7 +157,6 @@
       margin-bottom: 20px;
       border-radius: 4px;
       border: 1px solid #ccc;
-      transition: border-color 0.3s, box-shadow 0.3s;
     }
 
     input[type="date"],
@@ -239,11 +221,11 @@
 
   <div id="sunflower-video-container">
     <video id="sunflower-video" autoplay loop muted playsinline>
-      <source src="vid/sunflower vid.mp4" type="video/mp4" />
+      <source src="../vid/sunflower vid.mp4" type="video/mp4" />
     </video>
   </div>
 
-  <audio id="audio-player" src="vid/Passenger Seat.mp3" loop></audio>
+  <audio id="audio-player" src="../vid/Passenger Seat.mp3" loop></audio>
 
   <div id="letter-modal" class="letter-modal">
     <div class="letter-content">
