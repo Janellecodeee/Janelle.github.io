@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Valorant Gun View</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #fff;
+      font-family: Arial, sans-serif;
+    }
+    .weapon-card {
+      max-width: 600px;
+      margin: 5rem auto;
+      padding: 2rem;
+      border-radius: 2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    .weapon-name {
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .weapon-type {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    .skin-card {
+      background: #f9f9f9;
+      padding: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .skin-card img,
+    .skin-card video {
+      max-width: 100%;
+      border-radius: 0.5rem;
+      margin: 0 auto 1rem;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="content"></div>
+
+  <script>
+    var params = new URLSearchParams(location.search);
+    var id = (params.get('id') || '').toLowerCase().trim();
+
+    async function showGun() {
+      if (!id) {
+        document.getElementById('content').innerHTML = '<p class="text-center mt-5">No gun specified in URL.</p>';
+        return;
+      }
+
+      var res = await fetch('https://valorant-api.com/v1/weapons');
+      var data = await res.json();
+      var guns = data.data.filter(function(g) {
+        return !g.displayName.toLowerCase().includes('melee');
+      });
+
+      var gun = guns.find(function(g) {
+        return g.displayName.toLowerCase().startsWith(id);
+      });
+
+      if (!gun) {
+        document.getElementById('content').innerHTML = '<p class="text-center mt-5">Gun not found.</p>';
+        return;
+      }
+
+      var skin = gun.skins && gun.skins.length ? gun.skins[0] : null;
+      var videoLevel = skin && skin.levels ? skin.levels.find(function(l) {
+        return l.streamedVideo;
+      }) : null;
+
+      var mediaHtml = '';
+      if (videoLevel) {
+        mediaHtml = '<img src="' + (videoLevel.displayIcon || skin.displayIcon) + '" alt="' + skin.displayName + '">' +
+                    '<video src="' + videoLevel.streamedVideo + '" controls autoplay></video>';
+      } else if (skin && skin.displayIcon) {
+        mediaHtml = '<img src="' + skin.displayIcon + '" alt="' + skin.displayName + '">' +
+                    '<p>No video available</p>';
+      }
+
+      document.getElementById('content').innerHTML =
+        '<div class="weapon-card">' +
+          '<div class="weapon-name">' + gun.displayName + '</div>' +
+          '<div class="weapon-type">' + (gun.shopData && gun.shopData.categoryText ? gun.shopData.categoryText : 'Unknown Type') + '</div>' +
+          '<div class="skin-card">' + mediaHtml + '</div>' +
+        '</div>';
+    }
+
+    showGun();
+  </script>
+</body>
+
+</html>
