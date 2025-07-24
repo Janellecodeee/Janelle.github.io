@@ -4,12 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>eme lang</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       height: 100vh;
       background-color: #000;
-      font-family: 'Georgia', serif;
+      font-family: 'Poppins', sans-serif;
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -148,6 +149,8 @@
       width: 80%;
       max-width: 600px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     input, select {
@@ -206,6 +209,63 @@
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
+    }
+
+    /* ✅ Responsive Styles */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8em;
+        margin-bottom: 30px;
+        padding: 0 10px;
+      }
+
+      .buttons {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 20px;
+        gap: 20px;
+      }
+
+      button {
+        min-width: 100%;
+        max-width: 300px;
+        font-size: 16px;
+        padding: 10px 15px;
+      }
+
+      .letter-content,
+      #questions {
+        width: 95%;
+        padding: 20px;
+      }
+
+      input, select, input[type="date"], input[type="time"] {
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+
+      .question {
+        padding: 10px 0;
+      }
+
+      .question h2 {
+        font-size: 1.2em;
+        margin-bottom: 15px;
+      }
+
+      #q2-next,
+      #submit-button,
+      #click-it-button {
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      #confirmation-message {
+        padding-top: 15px;
+        font-size: 1em;
+        word-wrap: break-word;
+      }
     }
   </style>
 </head>
@@ -266,89 +326,89 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
-  (function() {
-    emailjs.init("U_njie329B33sAkl2"); 
-  })();
-</script>
+  <script>
+    (function() {
+      emailjs.init("U_njie329B33sAkl2");
+    })();
+  </script>
 
-<script>
-  const noButton = document.getElementById('no-button');
+  <script>
+    const noButton = document.getElementById('no-button');
 
-  function moveNoButton() {
-    const buttonWidth = noButton.offsetWidth;
-    const buttonHeight = noButton.offsetHeight;
-    const padding = 20;
-    const maxX = window.innerWidth - buttonWidth - padding;
-    const maxY = window.innerHeight - buttonHeight - padding;
-    const newX = Math.floor(Math.random() * maxX);
-    const newY = Math.floor(Math.random() * maxY);
-    noButton.style.position = 'fixed';
-    noButton.style.left = `${newX}px`;
-    noButton.style.top = `${newY}px`;
-  }
-
-  noButton.addEventListener('mouseenter', moveNoButton);
-  noButton.addEventListener('mousedown', moveNoButton);
-
-  document.getElementById('yes-button').addEventListener('click', () => {
-    document.getElementById('question-container').style.display = 'none';
-    document.getElementById('sunflower-video-container').style.display = 'block';
-    document.getElementById('sunflower-video').play();
-    document.getElementById('audio-player').style.display = 'block';
-    document.getElementById('audio-player').play();
-
-    setTimeout(() => {
-      document.getElementById('letter-modal').style.display = 'block';
-    }, 5000);
-  });
-
-  document.getElementById('open-letter-button').addEventListener('click', () => {
-    document.getElementById('love-letter').style.display = 'block';
-    document.getElementById('open-letter-button').style.display = 'none';
-    document.getElementById('click-it-button').style.display = 'inline-block';
-  });
-
-  document.getElementById('click-it-button').addEventListener('click', () => {
-    document.getElementById('letter-modal').style.display = 'none';
-    document.getElementById('questions').style.display = 'block';
-  });
-
-  document.getElementById('q1-yes').addEventListener('click', () => {
-    document.getElementById('q1').classList.add('hidden');
-    document.getElementById('q2').classList.remove('hidden');
-  });
-
-  document.getElementById('q2-next').addEventListener('click', () => {
-    document.getElementById('q2').classList.add('hidden');
-    document.getElementById('q3').classList.remove('hidden');
-  });
-
-  document.getElementById('submit-button').addEventListener('click', () => {
-    const date = document.getElementById('date').value;
-    const time = document.getElementById('time').value;
-    const restaurant = document.getElementById('restaurant').value;
-
-    if (date && time) {
-      const message = `So glad you said yes, see you on ${date} at ${time}! I’m really excited! Can’t wait to get to know you better and have a fun time together. Let me know if there’s anything specific you’d like to do or anywhere you’d like to go!`;
-
-      document.getElementById('confirmation-message').textContent = message;
-      document.getElementById('confirmation-message').classList.remove('hidden');
-
-      emailjs.send("service_4lkadmr", "template_ount56j", {
-        to_name: "Janelle",
-        from_name: "Crush",
-        message: `Restaurant: ${restaurant}\nDate: ${date}\nTime: ${time}`
-      }).then(response => {
-        console.log("Email sent!", response.status);
-      }).catch(err => {
-        console.error("Failed to send email", err);
-      });
-    } else {
-      alert("Please pick both date and time.");
+    function moveNoButton() {
+      const buttonWidth = noButton.offsetWidth;
+      const buttonHeight = noButton.offsetHeight;
+      const padding = 20;
+      const maxX = window.innerWidth - buttonWidth - padding;
+      const maxY = window.innerHeight - buttonHeight - padding;
+      const newX = Math.floor(Math.random() * maxX);
+      const newY = Math.floor(Math.random() * maxY);
+      noButton.style.position = 'fixed';
+      noButton.style.left = `${newX}px`;
+      noButton.style.top = `${newY}px`;
     }
-  });
-</script>
+
+    noButton.addEventListener('mouseenter', moveNoButton);
+    noButton.addEventListener('mousedown', moveNoButton);
+
+    document.getElementById('yes-button').addEventListener('click', () => {
+      document.getElementById('question-container').style.display = 'none';
+      document.getElementById('sunflower-video-container').style.display = 'block';
+      document.getElementById('sunflower-video').play();
+      document.getElementById('audio-player').style.display = 'block';
+      document.getElementById('audio-player').play();
+
+      setTimeout(() => {
+        document.getElementById('letter-modal').style.display = 'block';
+      }, 5000);
+    });
+
+    document.getElementById('open-letter-button').addEventListener('click', () => {
+      document.getElementById('love-letter').style.display = 'block';
+      document.getElementById('open-letter-button').style.display = 'none';
+      document.getElementById('click-it-button').style.display = 'inline-block';
+    });
+
+    document.getElementById('click-it-button').addEventListener('click', () => {
+      document.getElementById('letter-modal').style.display = 'none';
+      document.getElementById('questions').style.display = 'block';
+    });
+
+    document.getElementById('q1-yes').addEventListener('click', () => {
+      document.getElementById('q1').classList.add('hidden');
+      document.getElementById('q2').classList.remove('hidden');
+    });
+
+    document.getElementById('q2-next').addEventListener('click', () => {
+      document.getElementById('q2').classList.add('hidden');
+      document.getElementById('q3').classList.remove('hidden');
+    });
+
+    document.getElementById('submit-button').addEventListener('click', () => {
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+      const restaurant = document.getElementById('restaurant').value;
+
+      if (date && time) {
+        const message = `So glad you said yes, see you on ${date} at ${time}! I’m really excited! Can’t wait to get to know you better and have a fun time together. Let me know if there’s anything specific you’d like to do or anywhere you’d like to go!`;
+
+        document.getElementById('confirmation-message').textContent = message;
+        document.getElementById('confirmation-message').classList.remove('hidden');
+
+        emailjs.send("service_4lkadmr", "template_ount56j", {
+          to_name: "Janelle",
+          from_name: "Crush",
+          message: `Restaurant: ${restaurant}\nDate: ${date}\nTime: ${time}`
+        }).then(response => {
+          console.log("Email sent!", response.status);
+        }).catch(err => {
+          console.error("Failed to send email", err);
+        });
+      } else {
+        alert("Please pick both date and time.");
+      }
+    });
+  </script>
 
 </body>
 </html>
