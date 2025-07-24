@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Valorant Gun Skins</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .weapon-card {
+      padding: 2rem;
+      border-radius: 2rem;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+      margin-bottom: 2rem;
+    }
+
+    .weapon-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      color: #000000;
+    }
+
+    .weapon-type {
+      font-size: 1.2rem;
+      color: #000000;
+      text-align: center;
+    }
+
+    .skin-card {
+      padding: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1rem;
+      background-color: #f9f9f9;
+    }
+
+    .skin-card img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .video-container video {
+      max-width: 100%;
+      cursor: pointer;
+      border-radius: 0.5rem;
+    }
+
+    .header-bar {
+      background-color: black;
+      padding: 1rem 0;
+    }
+
+    .header-bar h3 {
+      margin: 0;
+      color: white;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .nav-link {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: white;
+      margin-right: 1rem;
+    }
+
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .navbar-center {
+      display: flex;
+      justify-content: center;
+      flex-grow: 1;
+    }
+
+    .search-bar {
+      margin-top: 8rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <video id="bg-video" autoplay muted loop playsinline></video>
+
+  <div class="container-fluid py-3 header-bar">
+    <div class="container d-flex">
+      <div class="navbar-left">
+        <a href="../index.html" class="nav-link text-white">Home</a>
+      </div>
+      <div class="navbar-center">
+        <h3 class="text-white mb-0">Valorant Gun Skins</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-4">
+    <div class="row mb-3">
+      <div class="col-md-6 mx-auto">
+        <input type="text" id="searchInput" class="form-control rounded-pill"
+          placeholder="Search gun name (e.g., Vandal)">
+      </div>
+    </div>
+    <div class="row" id="gunContainer"></div>
+
+  </div>
+
+  <script>
+    var gunContainer = document.getElementById("gunContainer");
+    var searchInput = document.getElementById("searchInput");
+    var bgVideo = document.getElementById("bg-video");
+
+    var allGuns = [];
+
+    searchInput.addEventListener("input", async function () {
+      var value = searchInput.value.toLowerCase().trim();
+      gunContainer.innerHTML = "";
+      if (!value) return;
+
+      var filtered = allGuns.filter(function (gun) {
+        return gun.displayName.toLowerCase().includes(value);
+      });
+
+      if (filtered.length === 0) {
+        gunContainer.innerHTML = "<p class='text-center text-muted'>No matching gun found.</p>";
+        return;
+      }
+
+      for (var i = 0; i < filtered.length; i++) {
+        var gun = filtered[i];
+        var skinsHtml = await fetchSkinsHtml(gun);
+
+        gunContainer.innerHTML +=
+          '<div class="col-12">' +
+          '<div class="weapon-card">' +
+          '<div class="weapon-name mb-3">' + gun.displayName + '</div>' +
+          '<div class="weapon-type mb-3">' + (gun.shopData && gun.shopData.categoryText ? gun.shopData.categoryText : 'Unknown Type') + '</div>' +
+          skinsHtml +
+          '<a href="view.html?id=' + encodeURIComponent(gun.displayName) + '" class="btn btn-primary rounded-5 view-weapon">View Gun</a>' +
+          '</div>' +
+          '</div>';
+      }
+    });
+
+    async function fetchGuns() {
+      var res = await fetch('https://valorant-api.com/v1/weapons');
+      var data = await res.json();
+      allGuns = data.data.filter(function (gun) {
+        return !gun.displayName.toLowerCase().includes("melee");
+      });
+      var firstVideo = findFirstSkinVideo(allGuns);
+      if (firstVideo) {
+        bgVideo.src = firstVideo;
+      }
+    }
+
+    function findFirstSkinVideo(guns) {
+      for (var i = 0; i < guns.length; i++) {
+        var gun = guns[i];
+        for (var j = 0; j < gun.skins.length; j++) {
+          var skin = gun.skins[j];
+          var level = skin.levels.find(function (lvl) {
+            return lvl.streamedVideo;
+          });
+          if (level) return level.streamedVideo;
+        }
+      }
+      return null;
+    }
+
+    async function fetchSkinsHtml(gun) {
+      var skinsHtml = "";
+      var skins = gun.skins || [];
+      for (var i = 0; i < Math.min(3, skins.length); i++) {
+        var skin = skins[i];
+        var levels = skin.levels.filter(function (level) {
+          return level.streamedVideo;
+        });
+        var videoLevel = levels[levels.length - 1];
+        if (videoLevel) {
+          skinsHtml +=
+            '<div class="skin-card">' +
+            '<div class="mb-2"><strong>' + skin.displayName + '</strong></div>' +
+            '<img src="' + (videoLevel.displayIcon || skin.displayIcon) + '" alt="' + skin.displayName + '">' +
+            '<div class="video-container">' +
+            '<video class="skin-video" src="' + videoLevel.streamedVideo + '" controls></video>' +
+            '</div>' +
+            '</div>';
+        } else if (skin.displayIcon) {
+          skinsHtml +=
+            '<div class="skin-card">' +
+            '<div class="mb-2"><strong>' + skin.displayName + '</strong></div>' +
+            '<img src="' + skin.displayIcon + '" alt="' + skin.displayName + '">' +
+            '<div class="text-muted">No video available</div>' +
+            '</div>';
+        }
+      }
+      return skinsHtml;
+    }
+
+    fetchGuns();
+  </script>
+
+</body>
+
+</html>
